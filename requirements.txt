@@ -1,0 +1,14 @@
+fastapi[all]
+SQLAlchemy
+uvicorn
+alembic
+asyncpg
+bcrypt
+celery
+fastapi-cache2
+python-dotenv
+redis
+
+
+
+
