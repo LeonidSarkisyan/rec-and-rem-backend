@@ -8,6 +8,7 @@ celery
 fastapi-cache2
 python-dotenv
 redis
+psycopg2
 
 
 
