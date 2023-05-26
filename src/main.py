@@ -10,3 +10,6 @@ app.include_router(auth_router)
 @app.get('/')
 def home():
     return {'status': 'Ok'}
+
+
+# ЭТО ВЕРСИЯ ДЛЯ НОУТБУКА
