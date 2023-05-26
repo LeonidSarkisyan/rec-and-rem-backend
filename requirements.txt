@@ -10,6 +10,7 @@ python-dotenv
 redis
 psycopg2
 PyJWT
+passlib
 
 
 
