@@ -9,7 +9,7 @@ fastapi-cache2
 python-dotenv
 redis
 psycopg2
-
+PyJWT
 
 
 

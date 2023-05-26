@@ -12,4 +12,9 @@ DB_PASS = os.environ.get("DB_PASS")
 REDIS_HOST = os.environ.get('REDIS_HOST')
 REDIS_PORT = os.environ.get('REDIS_PORT')
 
-SECRET_AUTH = os.environ.get("SECRET_AUTH")
+
+class AuthConfig:
+    ACCESS_TOKEN_EXPIRE_MINUTES = 3600
+    SECRET_KEY = os.environ.get('SECRET_AUTH')
+    ALGORITHM = "HS256"
+

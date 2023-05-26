@@ -7,3 +7,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     hashed_password: str
+
+
+class UserLogin(UserBase):
+    password: str
