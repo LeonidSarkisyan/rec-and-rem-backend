@@ -18,6 +18,16 @@ from typing import Dict
 
 
 class UserDB:
+
+    @staticmethod
+    async def get_users(query_search: str, session: AsyncSession):
+        if query_search:
+            query = select(User).where(User.email.contains(query_search))
+        else:
+            query = select(User)
+        result = await session.execute(query)
+        return result.scalars().all()
+
     @staticmethod
     async def add_user(user: UserCreate, session: AsyncSession):
         try:

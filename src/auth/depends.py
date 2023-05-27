@@ -4,7 +4,7 @@ import jwt
 from jwt.exceptions import DecodeError
 from config import AuthConfig
 
-from auth.services.db import UserDB
+from auth.routers.auth import UserDB
 
 from database import get_async_session
 
