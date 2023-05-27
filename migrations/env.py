@@ -11,6 +11,8 @@ from src.database import Base
 
 # Import models
 from src.auth.models import *
+from src.profile.models import *
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
