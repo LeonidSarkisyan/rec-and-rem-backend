@@ -7,7 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config import AuthConfig
 from database import get_async_session
 
-from auth.schemas import UserCreate, UserLogin
+from auth.schemas import UserCreate, UserLogin, UserRead
+
+from auth.models import User
 
 from auth.services.auth import UserAuth, create_access_token
 from auth.services.db import UserDB
@@ -23,9 +25,9 @@ async def create_user(user: UserCreate, session: AsyncSession = Depends(get_asyn
     return {'status': 'Ok', 'user_id': id_new_user}
 
 
-@router.get('/me')
-async def get_my_account(cookie=Depends(get_current_user)):
-    return cookie
+@router.get('/me', response_model=UserRead)
+async def get_my_account(user: User = Depends(get_current_user)):
+    return user
 
 
 @router.post('/login')
@@ -41,10 +43,8 @@ async def login(
     )
     response.set_cookie(key="Authorization", value=f"{access_token}",
                         httponly=True)
-    return {'status': 'Ok'}
 
 
 @router.post('/logout')
 async def logout(response: Response):
     response.delete_cookie('Authorization')
-    return {'status': 'Ok'}

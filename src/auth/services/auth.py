@@ -5,6 +5,7 @@ import jwt
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.services.db import UserDB
+from auth.services.hashing import Hash
 
 from auth.exceptions.http import BadLoginOrPassword
 
@@ -16,6 +17,8 @@ class UserAuth:
     async def authenticate_user(email: str, password: str, session: AsyncSession):
         user = await UserDB.get_user_by_email(email, session)
         if not user:
+            raise BadLoginOrPassword
+        if not Hash.verify(user.hashed_password, password):
             raise BadLoginOrPassword
         return user
 

@@ -32,43 +32,13 @@ class UserDB:
             return id_new_user[0]
 
     @staticmethod
-    async def get_user_by_id(user_id: int, session: AsyncSession):
+    async def get_user_by_id(user_id: int, session: AsyncSession) -> User:
         query = select(User).where(User.id == user_id)
         result = await session.execute(query)
         return result.scalars().first()
 
     @staticmethod
-    async def get_user_by_email(user_email: str, session: AsyncSession):
+    async def get_user_by_email(user_email: str, session: AsyncSession) -> User:
         query = select(User).where(User.email == user_email)
         result = await session.execute(query)
         return result.scalars().first()
-
-
-class OAuth2PasswordBearerWithCookie(OAuth2):
-    def __init__(
-        self,
-        tokenUrl: str,
-        scheme_name: Optional[str] = None,
-        scopes: Optional[Dict[str, str]] = None,
-        auto_error: bool = True,
-    ):
-        if not scopes:
-            scopes = {}
-        flows = OAuthFlowsModel(password={"tokenUrl": tokenUrl, "scopes": scopes})
-        super().__init__(flows=flows, scheme_name=scheme_name, auto_error=auto_error)
-
-    async def __call__(self, request: Request) -> Optional[str]:
-        authorization: str = request.cookies.get("access_token")
-        print("access_token is", authorization)
-
-        scheme, param = get_authorization_scheme_param(authorization)
-        if not authorization or scheme.lower() != "bearer":
-            if self.auto_error:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Not authenticated",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
-            else:
-                return None
-        return param

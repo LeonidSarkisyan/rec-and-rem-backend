@@ -11,3 +11,10 @@ class UserCreate(UserBase):
 
 class UserLogin(UserBase):
     password: str
+
+
+class UserRead(UserBase):
+    id: int
+
+    class Config:
+        orm_mode = True
