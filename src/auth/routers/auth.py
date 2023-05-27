@@ -30,7 +30,7 @@ async def get_my_account(user: User = Depends(get_current_user)):
     return user
 
 
-@router.post('/login')
+@router.post('/login', status_code=204)
 async def login(
         user_login: UserLogin,
         response: Response,
@@ -45,6 +45,6 @@ async def login(
                         httponly=True)
 
 
-@router.post('/logout')
+@router.post('/logout', status_code=204)
 async def logout(response: Response):
     response.delete_cookie('Authorization')
