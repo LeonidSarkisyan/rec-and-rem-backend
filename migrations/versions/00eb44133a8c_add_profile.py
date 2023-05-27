@@ -1,4 +1,4 @@
-"""add profile
+"""add profiles
 
 Revision ID: 00eb44133a8c
 Revises: d8abb2547819

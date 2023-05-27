@@ -1,7 +1,7 @@
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.database import Base
+from database import Base
 
 
 class Profile(Base):
@@ -11,6 +11,6 @@ class Profile(Base):
     first_name: Mapped[str] = mapped_column(String(30), index=True, nullable=True)
     second_name: Mapped[str] = mapped_column(String(30), nullable=True)
     username: Mapped[str] = mapped_column(String(30), nullable=True, unique=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
+    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=True, unique=True)
 
-    profile: Mapped["User"] = relationship(back_populates='user')
+    user: Mapped["User"] = relationship(back_populates='profile')

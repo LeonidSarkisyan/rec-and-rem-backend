@@ -3,7 +3,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 
 from auth.routers.auth import router as auth_router
 from auth.routers.user import router as user_router
-from profile.router import router as profile_router
+from profiles.router import router as profile_router
 
 app = FastAPI(title='Rec & Rem Backend')
 
