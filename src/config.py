@@ -18,3 +18,7 @@ class AuthConfig:
     SECRET_KEY = os.environ.get('SECRET_AUTH')
     ALGORITHM = "HS256"
 
+
+class YandexS3Config:
+    AWS_ACCESS_KEY_ID = os.environ.get('YANDEX_S3_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('YANDEX_S3_SECRET_KEY')

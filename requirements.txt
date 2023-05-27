@@ -11,6 +11,6 @@ redis
 psycopg2
 PyJWT
 passlib
-
+boto3
 
 

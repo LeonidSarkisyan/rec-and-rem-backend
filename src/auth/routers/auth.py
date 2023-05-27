@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config import AuthConfig
 from database import get_async_session
 
-from auth.schemas import UserCreate, UserLogin, UserRead
+from auth.schemas import UserCreate, UserLogin, UserRead, ChangePassword
 
 from auth.models import User
 
@@ -48,3 +48,12 @@ async def login(
 @router.post('/logout', status_code=204)
 async def logout(response: Response):
     response.delete_cookie('Authorization')
+
+
+@router.post('/password', status_code=204)
+async def change_password(
+        password: ChangePassword,
+        session: AsyncSession = Depends(get_async_session),
+        user: User = Depends(get_current_user)
+):
+    await UserAuth.change_password(password, session, user)

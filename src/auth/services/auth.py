@@ -4,12 +4,17 @@ import jwt
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from config import AuthConfig
+
 from auth.services.db import UserDB
 from auth.services.hashing import Hash
 
-from auth.exceptions.http import BadLoginOrPassword
+from auth.exceptions.http import BadLoginOrPassword, BadPasswordForChange
 
-from config import AuthConfig
+from auth.schemas import ChangePassword
+from auth.models import User
+
+
 
 
 class UserAuth:
@@ -21,6 +26,14 @@ class UserAuth:
         if not Hash.verify(user.hashed_password, password):
             raise BadLoginOrPassword
         return user
+
+    @staticmethod
+    async def change_password(password: ChangePassword, session: AsyncSession, user: User):
+        if not Hash.verify(user.hashed_password, password.old_password):
+            raise BadPasswordForChange
+
+        user.hashed_password = Hash.bcrypt(password.new_password)
+        await session.commit()
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):

@@ -10,6 +10,11 @@ BadLoginOrPassword = HTTPException(
     detail='Неверный логин или пароль'
 )
 
+BadPasswordForChange = HTTPException(
+    status_code=403,
+    detail='Неверный пароль'
+)
+
 NoAuthorization = HTTPException(
         status_code=403,
         detail="Отсутствует авторизация"

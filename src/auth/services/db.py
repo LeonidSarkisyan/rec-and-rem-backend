@@ -22,7 +22,7 @@ class UserDB:
     @staticmethod
     async def get_users(query_search: str, session: AsyncSession):
         if query_search:
-            query = select(User).where(User.email.contains(query_search))
+            query = select(User).where(User.email.ilike('%' + query_search + '%'))
         else:
             query = select(User)
         result = await session.execute(query)
@@ -52,3 +52,4 @@ class UserDB:
         query = select(User).where(User.email == user_email)
         result = await session.execute(query)
         return result.scalars().first()
+
