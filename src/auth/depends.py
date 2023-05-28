@@ -8,8 +8,10 @@ from auth.routers.auth import UserDB
 
 from database import get_async_session
 
-from auth.exceptions.http import NoAuthorization
+from auth.exceptions.http import NoAuthorization, NoAccess
 from auth.models import User
+
+from auth.services.rolesset import RolesSet
 
 
 async def get_current_user(request: Request, session=Depends(get_async_session)) -> User:

@@ -15,8 +15,6 @@ from auth.schemas import ChangePassword
 from auth.models import User
 
 
-
-
 class UserAuth:
     @staticmethod
     async def authenticate_user(email: str, password: str, session: AsyncSession):

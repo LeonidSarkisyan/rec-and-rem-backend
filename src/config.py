@@ -1,3 +1,5 @@
+import enum
+
 from dotenv import load_dotenv
 import os
 

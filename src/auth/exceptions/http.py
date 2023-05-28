@@ -19,3 +19,8 @@ NoAuthorization = HTTPException(
         status_code=403,
         detail="Отсутствует авторизация"
 )
+
+NoAccess = HTTPException(
+    status_code=403,
+    detail='У вас нет прав доступа'
+)

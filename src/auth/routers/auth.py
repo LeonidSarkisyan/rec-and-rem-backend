@@ -15,6 +15,7 @@ from auth.services.auth import UserAuth, create_access_token
 from auth.services.db import UserDB
 
 from auth.depends import get_current_user
+from auth.services.permissions import Permission, moderator_permission, user_permission, admin_permission
 
 router = APIRouter(tags=['Account'], prefix='/account')
 
@@ -57,3 +58,9 @@ async def change_password(
         user: User = Depends(get_current_user)
 ):
     await UserAuth.change_password(password, session, user)
+
+
+# ПРИМЕР ИСПОЛЬЗОВАНИЯ КАСТОМНОГО ПЕРМИШОНА
+@router.get('/moderator')
+async def moderator(user: Permission = Depends(user_permission)):
+    return 'success'

@@ -1,4 +1,4 @@
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -7,7 +7,7 @@ from fastapi import status
 
 from auth.models import User
 
-from profiles.schemas import ProfileCreate
+from profiles.schemas import ProfileCreate, ProfileUpdate
 from profiles.models import Profile
 
 from profiles.exceptions.http import ProfileAlreadyExist
@@ -29,3 +29,17 @@ class ProfileDB:
         except IntegrityError:
             raise ProfileAlreadyExist
         return 'success'
+
+    @staticmethod
+    async def update_profile(profile: ProfileUpdate, session: AsyncSession, user: User):
+        data = {key: value for key, value in profile.dict().items() if value}
+        stmt = update(Profile).where(Profile.user_id == user.id).values(**data)
+        await session.execute(stmt)
+        await session.commit()
+        return 'success'
+
+    @staticmethod
+    async def get_my_profile(session: AsyncSession, user: User):
+        query = select(Profile).where(Profile.user_id == user.id)
+        result = await session.execute(query)
+        return result.scalar()
