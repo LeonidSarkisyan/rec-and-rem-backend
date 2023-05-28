@@ -5,12 +5,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
 from fastapi import status
 
-from auth.models import User
+from src.auth.models import User
 
-from profiles.schemas import ProfileCreate, ProfileUpdate
-from profiles.models import Profile
+from src.profiles.schemas import ProfileCreate, ProfileUpdate
+from src.profiles.models import Profile
 
-from profiles.exceptions.http import ProfileAlreadyExist
+from src.profiles.exceptions.http import ProfileAlreadyExist
 
 
 class ProfileDB:

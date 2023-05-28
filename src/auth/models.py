@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
 
-from database import Base
+from src.database import Base
 
 
 class Role(Base):
@@ -26,3 +26,4 @@ class User(Base):
 
     role: Mapped["Role"] = relationship(back_populates='users')
     profile: Mapped["Profile"] = relationship(back_populates='user', uselist=False)
+    workspaces: Mapped[List["Workspace"]] = relationship(back_populates='user')

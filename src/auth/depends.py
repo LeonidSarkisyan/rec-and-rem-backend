@@ -2,16 +2,16 @@ from fastapi import Request, Depends
 
 import jwt
 from jwt.exceptions import DecodeError
-from config import AuthConfig
+from src.config import AuthConfig
 
-from auth.routers.auth import UserDB
+from src.auth.routers.auth import UserDB
 
-from database import get_async_session
+from src.database import get_async_session
 
-from auth.exceptions.http import NoAuthorization, NoAccess
-from auth.models import User
+from src.auth.exceptions.http import NoAuthorization, NoAccess
+from src.auth.models import User
 
-from auth.services.rolesset import RolesSet
+from src.auth.services.rolesset import RolesSet
 
 
 async def get_current_user(request: Request, session=Depends(get_async_session)) -> User:

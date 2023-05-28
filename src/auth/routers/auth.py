@@ -4,18 +4,18 @@ from fastapi import APIRouter, Depends, Response
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import AuthConfig
-from database import get_async_session
+from src.config import AuthConfig
+from src.database import get_async_session
 
-from auth.schemas import UserCreate, UserLogin, UserRead, ChangePassword
+from src.auth.schemas import UserCreate, UserLogin, UserRead, ChangePassword
 
-from auth.models import User
+from src.auth.models import User
 
-from auth.services.auth import UserAuth, create_access_token
-from auth.services.db import UserDB
+from src.auth.services.auth import UserAuth, create_access_token
+from src.auth.services.db import UserDB
 
-from auth.depends import get_current_user
-from auth.services.permissions import Permission, moderator_permission, user_permission, admin_permission
+from src.auth.depends import get_current_user
+from src.auth.services.permissions import Permission, moderator_permission, user_permission, admin_permission
 
 router = APIRouter(tags=['Account'], prefix='/account')
 
@@ -61,6 +61,6 @@ async def change_password(
 
 
 # ПРИМЕР ИСПОЛЬЗОВАНИЯ КАСТОМНОГО ПЕРМИШОНА
-@router.get('/moderator')
-async def moderator(user: Permission = Depends(user_permission)):
-    return 'success'
+# @router.get('/moderator')
+# async def moderator(user: Permission = Depends(user_permission)):
+#     return 'success'

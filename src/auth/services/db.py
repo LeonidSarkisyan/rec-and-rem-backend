@@ -3,10 +3,10 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from auth.schemas import UserCreate
-from auth.models import User
-from auth.exceptions.http import EmailAlreadyExists
-from auth.services.hashing import Hash
+from src.auth.schemas import UserCreate
+from src.auth.models import User
+from src.auth.exceptions.http import EmailAlreadyExists
+from src.auth.services.hashing import Hash
 
 from fastapi import Request
 from fastapi import HTTPException
@@ -15,8 +15,8 @@ from fastapi import status
 from typing import Optional
 from typing import Dict
 
-from auth.services.rolesset import RolesSet
-from auth.models import Role
+from src.auth.services.rolesset import RolesSet
+from src.auth.models import Role
 
 
 class UserDB:

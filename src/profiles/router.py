@@ -3,15 +3,14 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import get_async_session
+from src.database import get_async_session
 
-from auth.depends import get_current_user
+from src.auth.depends import get_current_user
 
+from src.profiles.schemas import ProfileCreate, ProfileUpdate
+from src.profiles.models import Profile
 
-from profiles.schemas import ProfileCreate, ProfileUpdate
-from profiles.models import Profile
-
-from profiles.services.db import ProfileDB
+from src.profiles.services.db import ProfileDB
 
 
 router = APIRouter(prefix='/profiles', tags=['Profile'])

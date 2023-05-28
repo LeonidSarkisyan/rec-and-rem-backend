@@ -2,13 +2,13 @@ from typing import List
 
 from fastapi import Request, Depends
 
-from auth.models import User
+from src.auth.models import User
 
-from auth.depends import get_current_user
+from src.auth.depends import get_current_user
 
-from auth.exceptions.http import NoAccess
+from src.auth.exceptions.http import NoAccess
 
-from auth.services.rolesset import RolesSet, Role
+from src.auth.services.rolesset import RolesSet, Role
 
 
 class Permission:

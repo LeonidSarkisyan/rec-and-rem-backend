@@ -1,12 +1,12 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 
-from auth.routers.auth import router as auth_router
-from auth.routers.user import router as user_router
-from profiles.router import router as profile_router
+from src.auth.routers.auth import router as auth_router
+from src.auth.routers.user import router as user_router
+from src.profiles.router import router as profile_router
 
 import boto3
-from config import YandexS3Config
+from src.config import YandexS3Config
 
 
 app = FastAPI(title='Rec & Rem Backend')

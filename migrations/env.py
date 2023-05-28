@@ -12,6 +12,7 @@ from src.database import Base
 # Import models
 from src.auth.models import *
 from src.profiles.models import *
+from src.workspace.models import *
 
 
 # this is the Alembic Config object, which provides

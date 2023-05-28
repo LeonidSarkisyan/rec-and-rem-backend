@@ -5,15 +5,15 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import select, insert, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import get_async_session
-from depends import get_query_search
+from src.database import get_async_session
+from src.depends import get_query_search
 
-from auth.models import User
-from auth.schemas import UserRead
+from src.auth.models import User
+from src.auth.schemas import UserRead
 
-from auth.services.db import UserDB
+from src.auth.services.db import UserDB
 
-router = APIRouter(prefix='/user', tags=['user'])
+router = APIRouter(prefix='/user', tags=['User'])
 
 
 @router.get('/', response_model=List[UserRead])

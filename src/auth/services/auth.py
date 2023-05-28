@@ -4,15 +4,15 @@ import jwt
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import AuthConfig
+from src.config import AuthConfig
 
-from auth.services.db import UserDB
-from auth.services.hashing import Hash
+from src.auth.services.db import UserDB
+from src.auth.services.hashing import Hash
 
-from auth.exceptions.http import BadLoginOrPassword, BadPasswordForChange
+from src.auth.exceptions.http import BadLoginOrPassword, BadPasswordForChange
 
-from auth.schemas import ChangePassword
-from auth.models import User
+from src.auth.schemas import ChangePassword
+from src.auth.models import User
 
 
 class UserAuth:
