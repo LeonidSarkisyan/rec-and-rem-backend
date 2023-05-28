@@ -5,6 +5,9 @@ from sqlalchemy import ForeignKey
 
 from src.database import Base
 
+# Костыль! (Наверное)
+from src.workspace.models import Workspace
+
 
 class Role(Base):
     __tablename__ = 'roles'
@@ -25,5 +28,6 @@ class User(Base):
     role_id: Mapped[int] = mapped_column(ForeignKey('roles.id'))
 
     role: Mapped["Role"] = relationship(back_populates='users')
-    profile: Mapped["Profile"] = relationship(back_populates='user', uselist=False)
     workspaces: Mapped[List["Workspace"]] = relationship(back_populates='user')
+    profile: Mapped["Profile"] = relationship(back_populates='user', uselist=False)
+

@@ -4,6 +4,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 from src.auth.routers.auth import router as auth_router
 from src.auth.routers.user import router as user_router
 from src.profiles.router import router as profile_router
+from src.workspace.router import router as workspace_router
 
 import boto3
 from src.config import YandexS3Config
@@ -14,6 +15,7 @@ app = FastAPI(title='Rec & Rem Backend')
 app.include_router(auth_router)
 app.include_router(user_router)
 app.include_router(profile_router)
+app.include_router(workspace_router)
 
 
 @app.get('/')
