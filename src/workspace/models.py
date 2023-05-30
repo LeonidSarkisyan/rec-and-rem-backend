@@ -9,6 +9,7 @@ class Workspace(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(30), nullable=False)
+    description: Mapped[str] = mapped_column(String(60), nullable=True)
     is_open: Mapped[bool] = mapped_column(default=False)
     url_open: Mapped[str] = mapped_column(default='')
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=True)

@@ -53,7 +53,7 @@ class UserDB:
         return result.scalars().first()
 
     @staticmethod
-    async def get_user_by_email(user_email: str, session: AsyncSession) -> User:
+    async def get_user_by_email(user_email: str, session: AsyncSession, with_profile: bool = True) -> User:
         query = select(User).where(User.email == user_email).options(selectinload(User.role))
         result = await session.execute(query)
         return result.scalars().first()

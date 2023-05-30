@@ -3,6 +3,7 @@ from pydantic import BaseModel, validator
 
 class WorkspaceBase(BaseModel):
     title: str
+    description: str | None = None
 
 
 class WorkspaceCreate(WorkspaceBase):

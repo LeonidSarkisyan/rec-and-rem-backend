@@ -14,7 +14,9 @@ from src.workspace.models import Workspace
 class WorkspaceDB:
     @staticmethod
     async def add_workspace(workspace: WorkspaceCreate, user: User, session: AsyncSession):
-        stmt = insert(Workspace).returning(Workspace.id).values(title=workspace.title, user_id=user.id)
+        stmt = insert(Workspace).returning(Workspace.id).values(
+            title=workspace.title, description=workspace.description, user_id=user.id
+        )
         result = await session.execute(stmt)
         new_workspace = result.mappings().first()
         await session.commit()

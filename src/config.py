@@ -24,3 +24,21 @@ class AuthConfig:
 class YandexS3Config:
     AWS_ACCESS_KEY_ID = os.environ.get('YANDEX_S3_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.environ.get('YANDEX_S3_SECRET_KEY')
+
+
+class YandexS3Bucket:
+    TEST = os.environ.get('BUCKET_TEST')
+
+
+class YandexDirectories:
+    AVATAR_PATH = os.environ.get('AVATAR_PATH')
+    buckets = YandexS3Bucket
+
+
+
+
+
+
+
+
+
