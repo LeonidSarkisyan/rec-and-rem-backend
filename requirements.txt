@@ -12,5 +12,5 @@ psycopg2
 PyJWT
 passlib
 boto3
-
+short_url
 

@@ -35,7 +35,10 @@ class YandexDirectories:
     buckets = YandexS3Bucket
 
 
-
+class RolesId:
+    ADMIN_ID = os.environ.get('ADMIN_ID')
+    MODERATOR_ID = os.environ.get('MODERATOR_ID')
+    USER_ID = os.environ.get('USER_ID')
 
 
 

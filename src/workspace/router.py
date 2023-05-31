@@ -63,3 +63,24 @@ async def delete_workspace(
         session: AsyncSession = Depends(get_async_session)
 ):
     return await WorkspaceDB.delete_workspace_by_id(workspace_id, user, session)
+
+
+# Эндпоинты для открытия / закрытия рабочего пространства другим пользователям
+
+@router.post('/opening/{workspace_id}')
+async def open_or_close_public_workspace(
+        workspace_id: int,
+        is_open: bool,
+        user=Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    return await WorkspaceDB.open_or_close_workspace_by_id(workspace_id, user, session, is_open=is_open)
+
+
+@router.get('/opening/{workspace_open_url')
+async def get_public_workspace(
+    workspace_open_url: str,
+    user=Depends(get_current_user),
+    session: AsyncSession = Depends(get_async_session)
+):
+    return await WorkspaceDB.get_public_workspace_by_id(workspace_open_url, user, session)
