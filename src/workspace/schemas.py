@@ -14,9 +14,17 @@ class WorkspaceUpdate(WorkspaceBase):
     pass
 
 
-class WorkspaceRead(WorkspaceBase):
+class WorkspaceWithId(WorkspaceBase):
     id: int
-    is_open: bool
 
     class Config:
         orm_mode = True
+
+
+class WorkspaceReadPublic(WorkspaceWithId):
+    class Config:
+        orm_mode = True
+
+
+class WorkspaceRead(WorkspaceWithId):
+    is_open: bool

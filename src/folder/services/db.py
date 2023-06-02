@@ -11,6 +11,8 @@ from src.workspace.models import Workspace
 from src.folder.schemas import FolderCreate, FolderUpdate
 from src.folder.models import Folder
 
+from src.folder.services.opening import FolderOpenManager
+
 
 class FolderDataBaseManager:
     @staticmethod
@@ -57,6 +59,46 @@ class FolderDataBaseManager:
         else:
             await session.commit()
         return 'success'
+
+    @staticmethod
+    async def open_or_close_folder_by_id(
+            folder_id: int,
+            user: User,
+            session: AsyncSession,
+            is_open: bool,
+    ):
+
+        unique_url: str = await FolderOpenManager.create_open_url(folder_id) if is_open else ''
+
+        data = {
+            "url_open": unique_url,
+            "is_open": is_open
+        }
+
+        stmt = update(Folder)\
+            .where(Folder.id == folder_id)\
+            .values(**data)\
+            .returning(Folder.user_id)
+
+        result = await session.execute(stmt)
+        user_id = result.scalar()
+        if user_id != user.id:
+            raise HTTPException(status_code=403, detail='Недоступно')
+        else:
+            await session.commit()
+        return {'status': 'Ok'}
+
+    @staticmethod
+    async def get_public_folder_by_id(folder_open_url: str, user: User, session: AsyncSession):
+        folder_id = await FolderOpenManager.get_folder_id(folder_open_url)
+        query = select(Folder).where(Folder.id == folder_id)
+        result = await session.execute(query)
+        folder = result.scalar()
+        if not folder:
+            raise HTTPException(status_code=404, detail='Не найдено')
+        if not folder.is_open:
+            raise HTTPException(status_code=404, detail='Не найдено')
+        return folder
 
 
 folder_db_manager = FolderDataBaseManager()

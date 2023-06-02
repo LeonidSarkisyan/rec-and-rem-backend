@@ -12,9 +12,12 @@ from src.depends import get_query_search
 from src.auth.depends import get_current_user
 
 from src.workspace.models import Workspace
-from src.workspace.schemas import WorkspaceCreate, WorkspaceRead, WorkspaceUpdate
+from src.workspace.schemas import WorkspaceCreate, WorkspaceRead, WorkspaceUpdate, WorkspaceReadPublic
 
 from src.workspace.services.db import WorkspaceDB
+
+from src.folder.router import router as folder_router
+
 
 router = APIRouter(prefix='/workspace', tags=['Workspace'])
 
@@ -77,7 +80,7 @@ async def open_or_close_public_workspace(
     return await WorkspaceDB.open_or_close_workspace_by_id(workspace_id, user, session, is_open=is_open)
 
 
-@router.get('/opening/{workspace_open_url')
+@router.get('/opening/{workspace_open_url}', response_model=WorkspaceReadPublic)
 async def get_public_workspace(
     workspace_open_url: str,
     user=Depends(get_current_user),
