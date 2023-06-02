@@ -4,12 +4,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi import HTTPException
 
+from src.services.opening import OpenManager
+
 from src.auth.models import User
 
 from src.workspace.schemas import WorkspaceRead, WorkspaceCreate, WorkspaceUpdate
 from src.workspace.models import Workspace
-
-from src.workspace.services.opening import WorkspaceOpenManager
 
 
 class WorkspaceDB:
@@ -70,7 +70,7 @@ class WorkspaceDB:
 
     @staticmethod
     async def get_public_workspace_by_id(workspace_open_url: str, user: User, session: AsyncSession):
-        workspace_id = await WorkspaceOpenManager.get_workspace_id(workspace_open_url)
+        workspace_id = await OpenManager.get_entity_id(workspace_open_url)
         query = select(Workspace).where(Workspace.id == workspace_id)
         result = await session.execute(query)
         workspace = result.scalar()
@@ -88,7 +88,7 @@ class WorkspaceDB:
             is_open: bool,
     ):
 
-        unique_url = await WorkspaceOpenManager.create_open_url(workspace_id) if is_open else ''
+        unique_url = await OpenManager.create_open_url(workspace_id) if is_open else ''
 
         data = {
             "url_open": unique_url,

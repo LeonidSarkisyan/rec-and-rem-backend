@@ -4,14 +4,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi import HTTPException
 
+from src.services.opening import OpenManager
+
 from src.auth.models import User
 
 from src.workspace.models import Workspace
 
 from src.folder.schemas import FolderCreate, FolderUpdate
 from src.folder.models import Folder
-
-from src.folder.services.opening import FolderOpenManager
 
 
 class FolderDataBaseManager:
@@ -68,7 +68,7 @@ class FolderDataBaseManager:
             is_open: bool,
     ):
 
-        unique_url: str = await FolderOpenManager.create_open_url(folder_id) if is_open else ''
+        unique_url: str = await OpenManager.create_open_url(folder_id) if is_open else ''
 
         data = {
             "url_open": unique_url,
@@ -90,7 +90,7 @@ class FolderDataBaseManager:
 
     @staticmethod
     async def get_public_folder_by_id(folder_open_url: str, user: User, session: AsyncSession):
-        folder_id = await FolderOpenManager.get_folder_id(folder_open_url)
+        folder_id = await OpenManager.get_entity_id(folder_open_url)
         query = select(Folder).where(Folder.id == folder_id)
         result = await session.execute(query)
         folder = result.scalar()
