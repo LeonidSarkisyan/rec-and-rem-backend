@@ -9,7 +9,7 @@ class WorkspaceOpenManager:
 
     @staticmethod
     async def create_open_url(workspace_id: int):
-        url = short_url.encode_url(workspace_id)
+        url = short_url.encode_url(workspace_id, 10)
         return url
 
     @staticmethod

@@ -4,6 +4,7 @@ from fastapi import HTTPException
 
 ProfileAlreadyExist = HTTPException(status_code=409, detail='Профиль уже создан')
 
+NoAvatar = HTTPException(status_code=404, detail='Произошла ошибка. Загрузите фото профиля.')
 
 class CustomHTTPException(HTTPException):
     def set_allow_file_types(self, key: str, allowed_file_types: List[str]):

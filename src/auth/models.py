@@ -28,6 +28,8 @@ class User(Base):
     role_id: Mapped[int] = mapped_column(ForeignKey('roles.id'))
 
     role: Mapped["Role"] = relationship(back_populates='users')
-    workspaces: Mapped[List["Workspace"]] = relationship(back_populates='user')
     profile: Mapped["Profile"] = relationship(back_populates='user', uselist=False)
+    workspaces: Mapped[List["Workspace"]] = relationship(back_populates='user')
+    folders: Mapped["Folder"] = relationship(back_populates='user')
+
 

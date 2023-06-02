@@ -3,7 +3,6 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi import HTTPException
-from fastapi import status
 
 from src.auth.models import User
 
@@ -39,7 +38,7 @@ class WorkspaceDB:
         return result.scalars().all()
 
     @staticmethod
-    async def get_workspace_by_id(workspace_id: int, user: User, session: AsyncSession):
+    async def get_workspace_by_id(workspace_id: int, user: User, session: AsyncSession) -> Workspace:
         query = select(Workspace).where(Workspace.id == workspace_id)
         result = await session.execute(query)
         workspace = result.scalar()

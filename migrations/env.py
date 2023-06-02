@@ -10,6 +10,7 @@ from src.config import DB_HOST, DB_PORT, DB_USER, DB_NAME, DB_PASS
 from src.database import Base
 
 # Import models
+from src.folder.models import *
 from src.profiles.models import *
 from src.workspace.models import *
 from src.auth.models import *
