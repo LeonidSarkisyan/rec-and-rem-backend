@@ -5,6 +5,8 @@ from sqlalchemy import ForeignKey, String
 
 from src.database import Base
 
+from src.abstract.models import Abstract
+
 
 class Folder(Base):
     __tablename__ = 'folders'
@@ -18,3 +20,4 @@ class Folder(Base):
 
     user: Mapped["User"] = relationship(back_populates='folders')
     workspace: Mapped["Workspace"] = relationship(back_populates='folders')
+    abstracts: Mapped["Abstract"] = relationship(back_populates='folder')

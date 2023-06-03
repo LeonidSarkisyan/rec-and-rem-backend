@@ -8,7 +8,7 @@ from src.auth.depends import get_current_user
 
 from src.workspace.depends import get_my_workspace
 
-from src.folder.services.db import folder_db_manager
+from src.folder.services.db import folder_db_manager, folder_database_manager
 
 from src.folder.schemas import FolderCreate, FolderBase, FolderReadPublic
 
@@ -23,7 +23,7 @@ async def create_folder(
         user=Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
 ):
-    return await folder_db_manager.add_folder(folder, workspace, user, session)
+    return await folder_database_manager.add_entity(folder, workspace, user=user, session=session)
 
 
 @router.get('/')
@@ -32,7 +32,7 @@ async def get_folders(
         user=Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
 ):
-    return await folder_db_manager.get_folders(workspace, user, session)
+    return await folder_database_manager.get_entities(workspace.id, user, session)
 
 # router_without_workspace_id
 
@@ -43,7 +43,7 @@ async def get_folder(
         user=Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
 ):
-    return await folder_db_manager.get_folder_by_id(folder_id, user, session)
+    return await folder_database_manager.get_entity_by_id(folder_id, user, session)
 
 
 @router_without_workspace_id.patch('/{folder_id}')

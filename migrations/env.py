@@ -14,6 +14,7 @@ from src.folder.models import *
 from src.profiles.models import *
 from src.workspace.models import *
 from src.auth.models import *
+from src.abstract.models import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

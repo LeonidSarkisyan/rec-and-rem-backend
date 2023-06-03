@@ -7,6 +7,8 @@ from src.profiles.router import router as profile_router
 from src.workspace.router import router as workspace_router
 from src.folder.router import router as folder_router
 from src.folder.router import router_without_workspace_id as folder_router_without_workspace_id
+from src.abstract.router import router as abstract_router
+from src.abstract.router import router_without_folder_id as abstract_router_without_router_id
 
 import boto3
 from src.config import YandexS3Config
@@ -14,12 +16,14 @@ from src.config import YandexS3Config
 
 app = FastAPI(title='Rec & Rem Backend')
 
-app.include_router(auth_router)
-app.include_router(user_router)
-app.include_router(profile_router)
-app.include_router(workspace_router)
+app.include_router(abstract_router)
+app.include_router(abstract_router_without_router_id)
 app.include_router(folder_router)
 app.include_router(folder_router_without_workspace_id)
+app.include_router(workspace_router)
+app.include_router(profile_router)
+app.include_router(user_router)
+app.include_router(auth_router)
 
 
 @app.get('/')

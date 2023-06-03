@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
 
 from src.services.opening import OpenManager
+from src.services.db import DataBaseManager
 
 from src.auth.models import User
 
@@ -14,14 +15,10 @@ from src.folder.schemas import FolderCreate, FolderUpdate
 from src.folder.models import Folder
 
 
+folder_database_manager = DataBaseManager(Folder, Workspace, parent_name_id='workspace_id', use_user_id=True)
+
+
 class FolderDataBaseManager:
-    @staticmethod
-    async def add_folder(folder: FolderCreate, workspace: Workspace, user: User, session: AsyncSession):
-        stmt = insert(Folder).returning(Folder.id).values(
-            title=folder.title, workspace_id=workspace.id, user_id=user.id)
-        result = await session.execute(stmt)
-        await session.commit()
-        return result.scalar()
 
     @staticmethod
     async def get_folders(workspace: Workspace, user: User, session: AsyncSession):
@@ -34,6 +31,8 @@ class FolderDataBaseManager:
         query = select(Folder).where(Folder.id == folder_id)
         result = await session.execute(query)
         folder = result.scalar()
+        if not folder:
+            raise HTTPException(status_code=404, detail='Не найдено')
         if folder.user_id != user.id:
             raise HTTPException(status_code=403, detail='Недоступно')
         return folder

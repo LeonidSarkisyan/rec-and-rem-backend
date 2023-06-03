@@ -31,5 +31,5 @@ class User(Base):
     profile: Mapped["Profile"] = relationship(back_populates='user', uselist=False)
     workspaces: Mapped[List["Workspace"]] = relationship(back_populates='user')
     folders: Mapped["Folder"] = relationship(back_populates='user')
-
+    abstracts: Mapped["Abstract"] = relationship(back_populates='user')
 
