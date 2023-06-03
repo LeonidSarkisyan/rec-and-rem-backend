@@ -12,7 +12,7 @@ from src.auth.depends import get_current_user
 from src.folder.depends import get_my_folder
 from src.folder.models import Folder
 
-from src.abstract.schemas import AbstractCreate, AbstractRead
+from src.abstract.schemas import AbstractCreate, AbstractRead, AbstractUpdate
 
 from src.abstract.services.db import abstract_database_manager
 
@@ -50,6 +50,18 @@ async def get_abstract(
         session: AsyncSession = Depends(get_async_session)
 ):
     return await abstract_database_manager.get_entity_by_id(abstract_id, user, session)
+
+
+@router.patch('/{abstract_id}')
+async def update_abstract(
+        abstract_id: int,
+        abstract: AbstractUpdate,
+        user=Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    return await abstract_database_manager.update_entity_by_id(
+        abstract, entity_id=abstract_id, user=user, session=session
+    )
 
 
 @router_without_folder_id.delete('/{abstract_id}')

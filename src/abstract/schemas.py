@@ -4,6 +4,8 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
+from src.schemas import make_optional
+
 
 class AbstractBase(BaseModel):
     title: str
@@ -12,6 +14,13 @@ class AbstractBase(BaseModel):
 
 class AbstractCreate(AbstractBase):
     pass
+
+
+class AbstractUpdateSchema(AbstractBase):
+    content: str
+
+
+AbstractUpdate = make_optional(AbstractUpdateSchema)
 
 
 class AbstractWithId(AbstractBase):
