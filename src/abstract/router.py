@@ -37,7 +37,7 @@ async def get_abstracts(
         user=Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
 ):
-    return await abstract_database_manager.get_entities(folder.id, user, session)
+    return await abstract_database_manager.get_entities(filter_value=folder.id, user=user, session=session)
 
 
 router_without_folder_id = APIRouter(prefix='/folder/abstract', tags=['Abstract'])
@@ -72,3 +72,21 @@ async def delete_abstract(
 ):
     return await abstract_database_manager.delete_entity_by_id(abstract_id, user, session)
 
+
+@router_without_folder_id.post('/opening/{abstract_id}')
+async def open_or_close_public_abstract(
+        abstract_id: int,
+        is_open: bool,
+        user=Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    return await abstract_database_manager.open_or_close_entity_by_id(abstract_id, user, session, is_open)
+
+
+@router_without_folder_id.get('/opening/{abstract_url_open}')
+async def get_public_abstract(
+        abstract_url_open: str,
+        user=Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    return await abstract_database_manager.get_public_entity_by_id(abstract_url_open, user, session)

@@ -31,6 +31,7 @@ class AbstractRead(AbstractWithId):
     content: Optional[str]
     datetime_created: datetime
     datetime_updated: Optional[datetime]
+    folder_id: int
 
     class Config:
         orm_mode = True

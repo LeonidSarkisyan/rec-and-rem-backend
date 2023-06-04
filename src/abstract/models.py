@@ -20,7 +20,7 @@ class Abstract(Base):
     datetime_created: Mapped[datetime] = mapped_column(server_default=func.now())
     datetime_updated: Mapped[datetime] = mapped_column(onupdate=func.now(), nullable=True)
     is_open: Mapped[bool] = mapped_column(default=False)
-    open_url: Mapped[str] = mapped_column(nullable=True)
+    url_open: Mapped[str] = mapped_column(nullable=True)
     folder_id: Mapped[int] = mapped_column(ForeignKey('folders.id'))
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
 

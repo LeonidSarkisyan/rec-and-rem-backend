@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator
-
+from src.schemas import make_optional
 
 class WorkspaceBase(BaseModel):
     title: str
@@ -10,8 +10,11 @@ class WorkspaceCreate(WorkspaceBase):
     pass
 
 
-class WorkspaceUpdate(WorkspaceBase):
+class WorkspaceUpdateBase(WorkspaceBase):
     pass
+
+
+WorkspaceUpdate = make_optional(WorkspaceUpdateBase)
 
 
 class WorkspaceWithId(WorkspaceBase):

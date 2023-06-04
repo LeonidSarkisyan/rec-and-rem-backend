@@ -13,7 +13,7 @@ class Workspace(Base):
     title: Mapped[str] = mapped_column(String(30), nullable=False)
     description: Mapped[str] = mapped_column(String(60), nullable=True)
     is_open: Mapped[bool] = mapped_column(default=False)
-    url_open: Mapped[str] = mapped_column()
+    url_open: Mapped[str] = mapped_column(nullable=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=True)
 
     folders: Mapped['Folder'] = relationship(back_populates='workspace')
