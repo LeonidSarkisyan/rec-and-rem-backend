@@ -1,15 +1,18 @@
 from sqlalchemy import insert, select, update, delete
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi import HTTPException
 
-from src.services.opening import OpenManager
+from services.databasemanager.db import DataBaseOpenManager
+from services.databasemanager.opening import OpenManager
 
 from src.auth.models import User
 
-from src.workspace.schemas import WorkspaceRead, WorkspaceCreate, WorkspaceUpdate
+from src.workspace.schemas import WorkspaceCreate, WorkspaceUpdate
 from src.workspace.models import Workspace
+
+
+workspace_database_manager = DataBaseOpenManager(Workspace, use_user_id=True)
 
 
 class WorkspaceDB:

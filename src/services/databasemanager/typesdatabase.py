@@ -1,5 +1,5 @@
 import datetime
-from typing import Callable
+from typing import Callable, List
 from pydantic import BaseModel
 
 
@@ -22,7 +22,7 @@ default_type_database = [
 
 class TypeDataBaseManager:
     def __init__(self, load_default_types=True):
-        self.types = []
+        self.types: List[TypeDataBase] = []
         if load_default_types:
             self.types.extend(default_type_database)
 
@@ -41,3 +41,6 @@ class TypeDataBaseManager:
             raise StopIteration
         else:
             return type_data_base
+
+
+
