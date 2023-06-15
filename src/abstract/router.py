@@ -52,7 +52,7 @@ async def get_abstract(
     return await abstract_database_manager.get_entity_by_id(abstract_id, user, session)
 
 
-@router.patch('/{abstract_id}')
+@router_without_folder_id.patch('/{abstract_id}')
 async def update_abstract(
         abstract_id: int,
         abstract: AbstractUpdate,
@@ -90,3 +90,8 @@ async def get_public_abstract(
         session: AsyncSession = Depends(get_async_session)
 ):
     return await abstract_database_manager.get_public_entity_by_id(abstract_url_open, user, session)
+
+
+
+
+
