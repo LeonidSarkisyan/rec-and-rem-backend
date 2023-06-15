@@ -4,3 +4,7 @@ class DataBaseManagerException(Exception):
 
 class NotUseParentModel(DataBaseManagerException):
     pass
+
+
+class DoNotSetModel(DataBaseManagerException):
+    pass

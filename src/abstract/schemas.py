@@ -9,7 +9,8 @@ from src.schemas import make_optional
 
 class AbstractBase(BaseModel):
     title: str
-    description: str
+    description: Optional[str]
+    content: Optional[str]
 
 
 class AbstractCreate(AbstractBase):

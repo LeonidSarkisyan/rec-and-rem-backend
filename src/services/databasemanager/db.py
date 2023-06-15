@@ -1,5 +1,6 @@
 from sqlalchemy import insert, select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from fastapi import HTTPException
 
@@ -18,31 +19,15 @@ class DataBaseManager:
         A generic class that performs CRUD operations.
         But it has advanced functionality in the form of access, advanced select.
     """
-    def __init__(
-            self,
-            model,
-            parent_model=None,
-            parent_name_id: str = None,
-            use_user_id: bool = True,
-            search_field: str = None
-    ):
-        self.Model = model
-        self.ParentModel = parent_model
-        self.parent_name_id = parent_name_id
-        self.use_user_id = use_user_id
-        self.search_field = search_field
+    def __init__(self):
+        self.Model = None
+        self.ParentModel = None
+        self.parent_name_id = None
+        self.search_field = None
 
+        self.use_user_id = True
         self.types_manager = TypeDataBaseManager(load_default_types=True)
         self.use_parent: bool = False
-        self.is_use_parent_model()
-        if self.use_parent:
-            self.set_parent_type_database()
-
-    def is_use_parent_model(self):
-        if self.ParentModel and self.parent_name_id:
-            self.use_parent = True
-        else:
-            self.use_parent = False
 
     def set_parent_type_database(self):
         parent_type_database = TypeDataBase(self.ParentModel, lambda value: {self.parent_name_id: value.id})
@@ -167,5 +152,18 @@ class DataBaseOpenManager(DataBaseManager):
         if not entity.is_open:
             raise HTTPException(status_code=404, detail='Не найдено')
         return entity
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

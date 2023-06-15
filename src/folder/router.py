@@ -8,9 +8,11 @@ from src.auth.depends import get_current_user
 
 from src.workspace.depends import get_my_workspace
 
+from src.folder.depends import get_my_folder
+
 from src.folder.services.db import folder_database_manager
 
-from src.folder.schemas import FolderCreate, FolderBase, FolderReadPublic
+from src.folder.schemas import FolderCreate, FolderBase, FolderReadPublic, FolderWithAbstracts
 
 router = APIRouter(prefix='/workspace/{workspace_id}/folder', tags=['Folder'])
 router_without_workspace_id = APIRouter(prefix='/workspace/folder', tags=['Folder'])
@@ -33,6 +35,21 @@ async def get_folders(
         session: AsyncSession = Depends(get_async_session)
 ):
     return await folder_database_manager.get_entities(filter_value=workspace.id, user=user, session=session)
+
+
+@router_without_workspace_id.get('/copy/{folder_id}', response_model=FolderWithAbstracts)
+async def copy_abstracts_from_open_folder(
+        folder_open_url: str,
+        folder=Depends(get_my_folder),
+        user=Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    return await folder_database_manager.copy_child_entities_from_url_open(
+        entity_id=folder.id,
+        entity_url_open=folder_open_url,
+        user=user,
+        session=session
+    )
 
 # router_without_workspace_id
 
