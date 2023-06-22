@@ -7,6 +7,7 @@ from src.database import Base
 
 # Костыль! (Наверное)
 from src.workspace.models import Workspace
+from src.profiles.models import Profile
 
 
 class Role(Base):

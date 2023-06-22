@@ -26,6 +26,11 @@ async def create_abstract(
         user=Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
 ):
+    data: dict = abstract.dict()
+    data.update({'folder_id': folder.id})
+    data.update({'user_id': user.id})
+    return
+
     return await abstract_database_manager.add_entity(
         abstract, folder, datetime.datetime.now(), user=user, session=session
     )

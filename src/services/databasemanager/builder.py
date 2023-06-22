@@ -5,11 +5,11 @@ from src.services.databasemanager.exceptions import DoNotSetModel
 class DataBaseManagerBuilder:
     def __init__(self):
         self.__database_manager = DataBaseOpenManager()
-        self.ready_to_return: bool = False
+        self.__ready_to_return: bool = False
 
     def set_model(self, model):
         self.__database_manager.Model = model
-        self.ready_to_return = True
+        self.__ready_to_return = True
         return self
 
     def set_parent_model(self, model, parent_name_id: str):
@@ -28,7 +28,7 @@ class DataBaseManagerBuilder:
         return self
 
     def get_database_manager(self):
-        if self.ready_to_return:
+        if self.__ready_to_return:
             return self.__database_manager
         else:
             raise DoNotSetModel('Вы не установили модель для менеджера "set_model"')
