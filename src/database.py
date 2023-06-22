@@ -1,5 +1,12 @@
 from typing import AsyncGenerator
 
+from contextlib import asynccontextmanager, AbstractContextManager, AbstractAsyncContextManager
+from typing import Callable
+
+from sqlalchemy import create_engine, orm
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Session
+
 from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -18,3 +25,16 @@ async_session_maker = sessionmaker(engine, class_=AsyncSession, expire_on_commit
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
+
+
+class Database:
+
+    def __init__(self, db_url: str) -> None:
+        self._engine = create_async_engine(db_url, echo=True)
+        self._async_session_maker = sessionmaker(self._engine, class_=AsyncSession, expire_on_commit=False)
+
+    @asynccontextmanager
+    async def session(self) -> AsyncGenerator[AsyncSession, None]:
+        async with self._async_session_maker() as session:
+            yield session
+

@@ -1,0 +1,2 @@
+class DoNotSetModel(Exception):
+    pass

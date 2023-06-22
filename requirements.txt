@@ -13,4 +13,5 @@ PyJWT
 passlib
 boto3
 short_url
+dependency-injector
 
