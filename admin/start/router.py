@@ -17,5 +17,7 @@ async def login_in_root(
         admin_service: AdminService = Depends(Provide[Container.admin_service]),
 ):
     clear_login = await admin_service.authenticate(login)
-    admin_user = await admin_service.get_or_create_root_admin(login)
+    admin_user = await admin_service.get_or_create_root_admin(clear_login)
+    access_token = await admin_service.get_access_token(clear_login)
+    response.set_cookie(key="Authorization", value=f"{access_token}", httponly=True)
     return admin_user
