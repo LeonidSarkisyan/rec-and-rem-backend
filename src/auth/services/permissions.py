@@ -22,14 +22,14 @@ class Permission:
         raise NoAccess
 
 
-user_permission = Permission(
+get_valid_user = Permission(
     [RolesSet.user, RolesSet.moderator, RolesSet.admin]
 )
 
-moderator_permission = Permission(
+get_valid_moderator = Permission(
     [RolesSet.moderator, RolesSet.admin]
 )
 
-admin_permission = Permission(
+get_valid_admin = Permission(
     [RolesSet.admin]
 )

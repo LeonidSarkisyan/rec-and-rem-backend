@@ -13,7 +13,7 @@ from src.workspace.schemas import WorkspaceCreate, WorkspaceUpdate
 from src.workspace.models import Workspace
 
 
-#  workspace_database_manager = DataBaseOpenManager(Workspace, search_field='title', use_user_id=True)
+#  workspace_database_manager = DataBaseOpenManager(Workspace, search_fields='title', use_user_id=True)
 
 workspace_database_manager_builder = DataBaseManagerBuilder()
 

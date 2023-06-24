@@ -15,7 +15,7 @@ from src.auth.services.auth import UserAuth, create_access_token
 from src.auth.services.db import UserDB
 
 from src.auth.depends import get_current_user
-from src.auth.services.permissions import Permission, moderator_permission, user_permission, admin_permission
+from src.auth.services.permissions import Permission, get_valid_moderator, get_valid_user, get_valid_admin
 
 router = APIRouter(tags=['Account'], prefix='/account')
 
@@ -42,8 +42,7 @@ async def login(
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
-    response.set_cookie(key="Authorization", value=f"{access_token}",
-                        httponly=True)
+    response.set_cookie(key="Authorization", value=f"{access_token}", httponly=True)
 
 
 @router.post('/logout', status_code=204)

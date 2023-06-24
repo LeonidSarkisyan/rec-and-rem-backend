@@ -10,6 +10,7 @@ admin_repository_settings = (
     .set_sqlalchemy_model(User)
     .set_parent_model_id(User.role_id)
     .use_user(False)
+    .add_ident_field(User.email)
     .get_repository_settings()
 )
 
