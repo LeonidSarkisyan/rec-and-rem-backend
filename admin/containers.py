@@ -11,7 +11,7 @@ from admin.repositories import admin_repository_settings, role_repository_settin
 from src.repositories.repositories import BaseRepository
 
 
-MODULES = [".start.router", ".roles.router"]
+MODULES = [".admin_user.router", ".roles.router"]
 
 
 class Container(containers.DeclarativeContainer):

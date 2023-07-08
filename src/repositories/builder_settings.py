@@ -94,15 +94,3 @@ class RepositoriesSettingsBuilder:
             return self.__settings
         else:
             raise
-
-
-from src.abstract.models import Abstract
-
-
-a = IdentsField()
-a.add_property(Abstract.id)
-a.add_property(Abstract.title)
-
-field = a.get_property('id')
-
-print(field)
