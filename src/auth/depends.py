@@ -1,7 +1,7 @@
 from fastapi import Request, Depends
 
 import jwt
-from jwt.exceptions import DecodeError
+from jwt.exceptions import DecodeError, ExpiredSignatureError
 from src.config import AuthConfig
 
 from src.auth.routers.auth import UserDB
@@ -18,7 +18,7 @@ async def get_current_user(request: Request, session=Depends(get_async_session))
     cookie_authorization: str = request.cookies.get("Authorization")
     try:
         data: dict = jwt.decode(cookie_authorization, key=AuthConfig.SECRET_KEY, algorithms=AuthConfig.ALGORITHM)
-    except DecodeError:
+    except (DecodeError, ExpiredSignatureError):
         raise NoAuthorization
     user = await UserDB.get_user_by_email(data.get('sub'), session)
     return user

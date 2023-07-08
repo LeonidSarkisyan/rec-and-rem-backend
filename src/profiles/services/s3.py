@@ -21,3 +21,4 @@ def get_avatar_from_s3(url: str):
     except Exception:
         raise NoAvatar
     return object_s3
+

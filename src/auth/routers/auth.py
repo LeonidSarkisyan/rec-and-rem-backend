@@ -1,3 +1,4 @@
+import time
 from datetime import timedelta
 
 from fastapi import APIRouter, Depends, Response
@@ -42,7 +43,11 @@ async def login(
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
-    response.set_cookie(key="Authorization", value=f"{access_token}", httponly=True)
+    response.set_cookie(
+        key="Authorization",
+        value=f"{access_token}",
+        httponly=True,
+    )
 
 
 @router.post('/logout', status_code=204)

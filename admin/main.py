@@ -6,7 +6,7 @@ from admin.schemas import Login
 from admin.containers import Container
 from admin.services.authetication.authetication import AdminService
 
-from admin.start.router import app as router_login
+from admin.admin_user.router import app as router_login
 from admin.roles.router import router as router_roles
 
 

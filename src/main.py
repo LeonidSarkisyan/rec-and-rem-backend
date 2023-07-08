@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.auth.routers.auth import router as auth_router
 from src.auth.routers.user import router as user_router
@@ -15,6 +16,18 @@ from src.config import YandexS3Config
 
 
 app = FastAPI(title='Rec & Rem Backend')
+
+
+origins = ["http://localhost:3000", 'https://localhost:8080']
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PATCH", "DELETE", "PUT"],
+    allow_headers=["Content-Type", "Set-Cookie"]
+)
+
 
 app.include_router(abstract_router)
 app.include_router(abstract_router_without_router_id)

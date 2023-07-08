@@ -21,7 +21,6 @@ async def create_default_roles(
     admin: User = Depends(get_admin),
     role_service: RoleService = Depends(Provide[Container.role_service])
 ):
-    print(admin)
     return await role_service.get_or_add_default_roles()
 
 

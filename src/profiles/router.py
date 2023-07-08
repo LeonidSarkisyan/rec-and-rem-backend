@@ -1,3 +1,5 @@
+from dependency_injector.wiring import inject, Provide
+
 from fastapi import APIRouter, Depends, File, UploadFile, BackgroundTasks
 from fastapi.responses import StreamingResponse
 
@@ -11,13 +13,14 @@ from src.auth.depends import get_current_user
 from src.profiles.schemas import ProfileCreate, ProfileUpdate
 from src.profiles.models import Profile
 
-
 from src.profiles.services.db import ProfileDB, AvatarDB
 from src.profiles.services.files import create_unique_filename
 
-
 from src.profiles.services.s3 import get_avatar_from_s3
 from src.profiles.depends import get_current_profile
+
+from src.containers import Container
+from src.services.photo_service.photo_service import PhotoService
 
 
 router = APIRouter(prefix='/profiles', tags=['Profile'])
@@ -68,10 +71,14 @@ async def get_avatar_profile(profile=Depends(get_current_profile), session: Asyn
 
 
 @router.put('/avatar')
+@inject
 async def update_upload_avatar_profile(
         file: UploadFile = File(),
         user=Depends(get_current_profile),
-        session: AsyncSession = Depends(get_async_session)
+        session: AsyncSession = Depends(get_async_session),
+        photo_service: PhotoService = Depends(Provide[Container.photo_service])
 ):
     url = create_unique_filename(file)
-    return await AvatarDB.update_upload_file(file, url, session, user)
+    photo_service.upload_photo(file, url)
+    return 'good'
+    #  return await AvatarDB.update_upload_file(file, url, session, user)
