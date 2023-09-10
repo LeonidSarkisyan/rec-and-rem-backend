@@ -1,3 +1,4 @@
+import time
 from typing import List
 
 from fastapi import APIRouter, Depends
@@ -34,7 +35,6 @@ async def get_workspace_list(
         session: AsyncSession = Depends(get_async_session)
 ):
     return await workspace_database_manager.get_entities(user=user, session=session, search_query=search_query)
-    # return await WorkspaceDB.get_workspace(query_search, user, session)
 
 
 @router.get('/{workspace_id}')

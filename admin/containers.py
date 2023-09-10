@@ -42,7 +42,6 @@ class Container(containers.DeclarativeContainer):
         RoleService,
         admin_info=AdminInfo(),
         role_repository=role_repository,
-
     )
 
 
