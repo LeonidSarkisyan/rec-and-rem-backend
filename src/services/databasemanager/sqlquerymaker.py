@@ -16,11 +16,11 @@ class SQLQueryMaker:
 
             query = select(model) \
                 .where(compare_attribute == filter_value) \
-                .where(search_attribute.ilike('%' + search_query + '%'))
+                .where(search_attribute.ilike('%' + search_query + '%')).order_by(model.id.desc())
         elif compare_attribute:
-            query = select(model).where(compare_attribute == filter_value)
+            query = select(model).where(compare_attribute == filter_value).order_by(model.id.desc())
         else:
-            query = select(model)
+            query = select(model).order_by(model.id.desc())
 
         return query
 

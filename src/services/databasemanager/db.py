@@ -1,10 +1,11 @@
 from sqlalchemy import insert, select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+from sqlalchemy.exc import DBAPIError
 
 from fastapi import HTTPException
 
-from src.exceptions.http import NotFound, AccessDenied
+from src.exceptions.http import NotFound, AccessDenied, OwnEntity, NotValidCode, ErrorByCreating
 
 from src.services.databasemanager.sqlquerymaker import default_sql_query_maker
 from src.services.databasemanager.exceptions import NotUseParentModel
@@ -12,6 +13,8 @@ from src.services.databasemanager.typesdatabase import TypeDataBase, TypeDataBas
 from src.services.databasemanager.opening import OpenManager
 
 from src.auth.models import User
+
+from src.utils.copy import duplicate_object
 
 
 class DataBaseManager:
@@ -50,7 +53,10 @@ class DataBaseManager:
             clean_data.update({'user_id': user.id})
 
         stmt = insert(self.Model).returning(self.Model.id).values(**clean_data)
-        result = await session.execute(stmt)
+        try:
+            result = await session.execute(stmt)
+        except DBAPIError as e:
+            raise ErrorByCreating
         await session.commit()
         return result.scalar()
 
@@ -121,8 +127,15 @@ class DataBaseOpenManager(DataBaseManager):
         Extends the shared class by adding the ability to open/close entities in shared access.
         Models must have two required attributes: url_open: str, is_open: bool.
     """
-    async def open_or_close_entity_by_id(self, entity_id: int, user: User, session: AsyncSession, is_open: bool):
-        unique_url: str = await OpenManager.create_open_url(entity_id) if is_open else ''
+    @staticmethod
+    async def get_unique_url(entity_id: int, user: User, session: AsyncSession, count_symbols: int = 10):
+        unique_url: str = await OpenManager.create_open_url(entity_id, n=count_symbols)
+        return unique_url
+
+    async def open_or_close_entity_by_id(
+            self, entity_id: int, user: User, session: AsyncSession, is_open: bool, count_symbols: int = 10
+    ):
+        unique_url: str = await OpenManager.create_open_url(entity_id, n=count_symbols) if is_open else ''
 
         data = {
             "url_open": unique_url,
@@ -140,30 +153,50 @@ class DataBaseOpenManager(DataBaseManager):
             raise AccessDenied
         else:
             await session.commit()
-        return {'status': 'Ok'}
+        return {'unique_url': f'{unique_url}'}
 
-    async def get_public_entity_by_id(self, entity_open_url: str, user: User, session: AsyncSession):
-        entity_id = await OpenManager.get_entity_id(entity_open_url)
+    async def get_public_entity_by_id(
+            self,
+            entity_open_url: str,
+            user: User,
+            session: AsyncSession,
+            copy: bool = False,
+            count_symbols: int = 12,
+            parent_id: int = None
+    ):
+        try:
+            entity_id = await OpenManager.get_entity_id(entity_open_url)
+        except ValueError:
+            raise NotValidCode
+
         query = select(self.Model).where(self.Model.id == entity_id)
-        result = await session.execute(query)
+        try:
+            result = await session.execute(query)
+        except DBAPIError:
+            raise NotValidCode
+
         entity = result.scalar()
         if not entity:
             raise HTTPException(status_code=404, detail='Не найдено')
         if not entity.is_open:
             raise HTTPException(status_code=404, detail='Не найдено')
+
+        if copy:
+            copy_object = duplicate_object(entity)
+            if copy_object.user_id != user.id:
+                copy_object.user_id = user.id
+                copy_object.is_open = False
+                copy_object.url_open = ''
+                data_dict = copy_object.__dict__
+                del data_dict['_sa_instance_state']
+                if parent_id:
+                    data_dict[self.parent_name_id] = parent_id
+                print(data_dict)
+                stmt = insert(self.Model).returning(self.Model).values(**data_dict)
+                result = await session.execute(stmt)
+                await session.commit()
+                return result.scalar()
+            else:
+                raise OwnEntity
+
         return entity
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

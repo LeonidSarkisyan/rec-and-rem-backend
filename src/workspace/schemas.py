@@ -1,6 +1,7 @@
 from pydantic import BaseModel, validator
 from src.schemas import make_optional
 
+
 class WorkspaceBase(BaseModel):
     title: str
     description: str | None = None
@@ -24,10 +25,11 @@ class WorkspaceWithId(WorkspaceBase):
         orm_mode = True
 
 
-class WorkspaceReadPublic(WorkspaceWithId):
-    class Config:
-        orm_mode = True
-
-
 class WorkspaceRead(WorkspaceWithId):
     is_open: bool
+    url_open: str | None
+
+
+class WorkspaceReadPublic(WorkspaceRead):
+    class Config:
+        orm_mode = True
