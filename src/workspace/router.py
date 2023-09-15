@@ -79,10 +79,20 @@ async def open_or_close_public_workspace(
     return await workspace_database_manager.open_or_close_entity_by_id(workspace_id, user, session, is_open=is_open)
 
 
+@router.get('/opening/show/{workspace_id}')
+async def get_unique_url(
+        workspace_id: int,
+        user=Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    return await workspace_database_manager.get_unique_url(workspace_id, user, session)
+
+
 @router.get('/opening/{workspace_open_url}', response_model=WorkspaceReadPublic)
 async def get_public_workspace(
     workspace_open_url: str,
+    copy: bool = False,
     user=Depends(get_current_user),
     session: AsyncSession = Depends(get_async_session)
 ):
-    return await workspace_database_manager.get_public_entity_by_id(workspace_open_url, user, session)
+    return await workspace_database_manager.get_public_entity_by_id(workspace_open_url, user, session, copy=copy)

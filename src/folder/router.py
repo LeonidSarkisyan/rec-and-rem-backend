@@ -4,14 +4,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database import get_async_session
 
+from src.depends import get_query_search
+
 from src.auth.depends import get_current_user
 
 from src.workspace.depends import get_my_workspace
 
 from src.folder.depends import get_my_folder
-
 from src.folder.services.db import folder_database_manager
-
 from src.folder.schemas import FolderCreate, FolderBase, FolderReadPublic, FolderWithAbstracts
 
 router = APIRouter(prefix='/workspace/{workspace_id}/folder', tags=['Folder'])
@@ -25,16 +25,21 @@ async def create_folder(
         user=Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
 ):
-    return await folder_database_manager.add_entity(folder, workspace, user=user, session=session)
+    return await folder_database_manager.add_entity(
+        folder, workspace, user=user, session=session
+    )
 
 
 @router.get('/')
 async def get_folders(
         workspace=Depends(get_my_workspace),
+        search_query: str = Depends(get_query_search),
         user=Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
 ):
-    return await folder_database_manager.get_entities(filter_value=workspace.id, user=user, session=session)
+    return await folder_database_manager.get_entities(
+        filter_value=workspace.id, user=user, session=session, search_query=search_query
+    )
 
 
 @router_without_workspace_id.get('/copy/{folder_id}', response_model=FolderWithAbstracts)
@@ -91,13 +96,28 @@ async def open_or_close_public_folder(
         user=Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
 ):
-    return await folder_database_manager.open_or_close_entity_by_id(folder_id, user, session, is_open=is_open)
+    return await folder_database_manager.open_or_close_entity_by_id(
+        folder_id, user, session, is_open=is_open, count_symbols=12
+    )
+
+
+@router_without_workspace_id.get('/opening/show/{folder_id}')
+async def get_unique_url(
+        folder_id: int,
+        user=Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    return await folder_database_manager.get_unique_url(folder_id, user, session, count_symbols=12)
 
 
 @router_without_workspace_id.get('/opening/{folder_open_url}', response_model=FolderReadPublic)
 async def get_public_folder(
     folder_open_url: str,
+    copy: bool = False,
+    workspace_id: int = 0,
     user=Depends(get_current_user),
     session: AsyncSession = Depends(get_async_session)
 ):
-    return await folder_database_manager.get_public_entity_by_id(folder_open_url, user, session)
+    return await folder_database_manager.get_public_entity_by_id(
+        folder_open_url, user, session, copy, parent_id=workspace_id
+    )

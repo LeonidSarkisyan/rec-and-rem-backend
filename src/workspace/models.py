@@ -16,5 +16,5 @@ class Workspace(Base):
     url_open: Mapped[str] = mapped_column(nullable=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=True)
 
-    folders: Mapped['Folder'] = relationship(back_populates='workspace')
+    folders: Mapped['Folder'] = relationship(back_populates='workspace', passive_deletes=True)
     user: Mapped["User"] = relationship(back_populates='workspaces')
