@@ -27,6 +27,12 @@ class DataBaseManagerBuilder:
         self.__database_manager.search_field = search_field
         return self
 
+    def set_child_field(self, child_model, child_parent_id, child_parent_name_id):
+        self.__database_manager.child_model = child_model
+        self.__database_manager.child_parent_id = child_parent_id
+        self.__database_manager.child_parent_name_id = child_parent_name_id
+        return self
+
     def get_database_manager(self):
         if self.__ready_to_return:
             return self.__database_manager

@@ -13,6 +13,8 @@ from src.workspace.depends import get_my_workspace
 from src.folder.depends import get_my_folder
 from src.folder.services.db import folder_database_manager
 from src.folder.schemas import FolderCreate, FolderBase, FolderReadPublic, FolderWithAbstracts
+from src.folder.service import FolderService
+
 
 router = APIRouter(prefix='/workspace/{workspace_id}/folder', tags=['Folder'])
 router_without_workspace_id = APIRouter(prefix='/workspace/folder', tags=['Folder'])
@@ -113,11 +115,7 @@ async def get_unique_url(
 @router_without_workspace_id.get('/opening/{folder_open_url}', response_model=FolderReadPublic)
 async def get_public_folder(
     folder_open_url: str,
-    copy: bool = False,
     workspace_id: int = 0,
     user=Depends(get_current_user),
-    session: AsyncSession = Depends(get_async_session)
 ):
-    return await folder_database_manager.get_public_entity_by_id(
-        folder_open_url, user, session, copy, parent_id=workspace_id
-    )
+    return await FolderService.copy_opened_entity_by_id(folder_open_url, user, parent_id=workspace_id)

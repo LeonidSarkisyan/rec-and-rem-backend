@@ -1,6 +1,6 @@
 from sqlalchemy import insert, select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, joinedload, lazyload, defaultload, contains_eager
 from sqlalchemy.exc import DBAPIError
 
 from fastapi import HTTPException
@@ -10,7 +10,7 @@ from src.exceptions.http import NotFound, AccessDenied, OwnEntity, NotValidCode,
 from src.services.databasemanager.sqlquerymaker import default_sql_query_maker
 from src.services.databasemanager.exceptions import NotUseParentModel
 from src.services.databasemanager.typesdatabase import TypeDataBase, TypeDataBaseManager
-from src.services.databasemanager.opening import OpenManager
+from src.services.databasemanager.opening import OpenManagerRepository
 
 from src.auth.models import User
 
@@ -27,6 +27,9 @@ class DataBaseManager:
         self.ParentModel = None
         self.parent_name_id = None
         self.search_field = None
+        self.child_model = None
+        self.child_parent_id = None
+        self.child_parent_name_id = None
 
         self.use_user_id = True
         self.types_manager = TypeDataBaseManager(load_default_types=True)
@@ -129,13 +132,13 @@ class DataBaseOpenManager(DataBaseManager):
     """
     @staticmethod
     async def get_unique_url(entity_id: int, user: User, session: AsyncSession, count_symbols: int = 10):
-        unique_url: str = await OpenManager.create_open_url(entity_id, n=count_symbols)
+        unique_url: str = await OpenManagerRepository.create_open_url(entity_id, n=count_symbols)
         return unique_url
 
     async def open_or_close_entity_by_id(
             self, entity_id: int, user: User, session: AsyncSession, is_open: bool, count_symbols: int = 10
     ):
-        unique_url: str = await OpenManager.create_open_url(entity_id, n=count_symbols) if is_open else ''
+        unique_url: str = await OpenManagerRepository.create_open_url(entity_id, n=count_symbols) if is_open else ''
 
         data = {
             "url_open": unique_url,
@@ -165,17 +168,19 @@ class DataBaseOpenManager(DataBaseManager):
             parent_id: int = None
     ):
         try:
-            entity_id = await OpenManager.get_entity_id(entity_open_url)
+            entity_id = await OpenManagerRepository.get_entity_id(entity_open_url)
         except ValueError:
             raise NotValidCode
 
         query = select(self.Model).where(self.Model.id == entity_id)
+
         try:
             result = await session.execute(query)
         except DBAPIError:
             raise NotValidCode
 
         entity = result.scalar()
+
         if not entity:
             raise HTTPException(status_code=404, detail='Не найдено')
         if not entity.is_open:
@@ -191,11 +196,33 @@ class DataBaseOpenManager(DataBaseManager):
                 del data_dict['_sa_instance_state']
                 if parent_id:
                     data_dict[self.parent_name_id] = parent_id
-                print(data_dict)
                 stmt = insert(self.Model).returning(self.Model).values(**data_dict)
                 result = await session.execute(stmt)
+                new_object = result.scalar()
+
+                # мы здесь
+                if self.child_model:
+                    query_child = select(self.child_model).where(self.child_parent_id == entity_id)
+                    result_children = await session.execute(query_child)
+                    children = result_children.scalars().all()
+
+                    objects = []
+
+                    for child in children:
+                        copy_child = duplicate_object(child)
+                        copy_child.user_id = user.id
+                        copy_child.is_open = False
+                        copy_child.url_open = ''
+                        data_dict = copy_child.__dict__
+                        del data_dict['_sa_instance_state']
+                        data_dict[self.child_parent_name_id] = new_object.id
+                        print(data_dict)
+                        objects.append(data_dict)
+
+                    await session.execute(insert(self.child_model), objects)
+
                 await session.commit()
-                return result.scalar()
+                return new_object
             else:
                 raise OwnEntity
 

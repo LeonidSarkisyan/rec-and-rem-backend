@@ -27,7 +27,7 @@ class YandexS3Config:
 
 
 class YandexS3Bucket:
-    TEST = os.environ.get('BUCKET_TEST')
+    TEST = os.environ.get('BUCKET')
 
 
 class YandexDirectories:
