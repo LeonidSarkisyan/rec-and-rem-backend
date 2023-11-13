@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List, Any
 
 from datetime import datetime
 
@@ -29,13 +29,19 @@ class AbstractWithId(AbstractBase):
 
 
 class AbstractRead(AbstractWithId):
-    content: Optional[str]
+    content: Optional[List[Any]]
     datetime_created: datetime
     datetime_updated: Optional[datetime]
     folder_id: int
+    is_open: bool
+    url_open: str | None
 
     class Config:
         orm_mode = True
         json_encoders = {
             datetime: lambda v: v.timestamp()
         }
+
+
+class AbstractContent(BaseModel):
+    content: str

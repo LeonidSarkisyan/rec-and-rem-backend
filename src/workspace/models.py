@@ -16,5 +16,18 @@ class Workspace(Base):
     url_open: Mapped[str] = mapped_column(nullable=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=True)
 
-    folders: Mapped['Folder'] = relationship(back_populates='workspace', passive_deletes=True)
+    folders: Mapped["Folder"] = relationship(back_populates='workspace')
+    workspace_avatars: Mapped["WorkspaceAvatar"] = relationship(back_populates='workspace')
+
     user: Mapped["User"] = relationship(back_populates='workspaces')
+
+
+class WorkspaceAvatar(Base):
+    __tablename__ = 'workspaces_avatars'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    photo_url: Mapped[str] = mapped_column(unique=True, nullable=True)
+    workspace_id: Mapped[int] = mapped_column(ForeignKey('workspaces.id', ondelete='CASCADE'), unique=True)
+
+    workspace: Mapped[Workspace] = relationship(back_populates='workspace_avatars')
+

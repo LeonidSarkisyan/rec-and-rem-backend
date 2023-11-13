@@ -8,12 +8,10 @@ import boto3
 from src.services.photo_service.photo_service import PhotoService
 
 
-MODULES = ['.profiles.router']
+MODULES = ['.profiles.router', '.service']
 
 
 class Container(containers.DeclarativeContainer):
-
-    wiring_config = containers.WiringConfiguration(modules=MODULES)
 
     s3_session = providers.Singleton(
         boto3.session.Session

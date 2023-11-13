@@ -8,6 +8,8 @@ OwnEntity = HTTPException(409, detail='Нельзя загружать свои 
 
 NotValidCode = HTTPException(422, detail='Некорректный код')
 
+PrivateResource = HTTPException(403, detail='Доступ к приватному ресурсу запрещён')
+
 
 class AgileHTTPException(HTTPException):
     def __init__(self, code, detail):

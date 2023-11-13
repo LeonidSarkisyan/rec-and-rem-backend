@@ -26,3 +26,17 @@ class SQLQueryMaker:
 
 
 default_sql_query_maker = SQLQueryMaker()
+
+
+class BaseSQLMaker:
+    model = None
+
+    @classmethod
+    def select(cls, entity_id: int):
+        query = select(cls.model).where(cls.model.id == entity_id)
+        return query
+
+    @classmethod
+    def insert(cls, data_dict: dict, returning):
+        stmt = insert(cls.model).returning(returning).values(**data_dict)
+        return stmt

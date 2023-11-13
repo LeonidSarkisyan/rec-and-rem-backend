@@ -10,6 +10,7 @@ from src.folder.router import router as folder_router
 from src.folder.router import router_without_workspace_id as folder_router_without_workspace_id
 from src.abstract.router import router as abstract_router
 from src.abstract.router import router_without_folder_id as abstract_router_without_router_id
+from src.images.router import router as image_router
 
 import boto3
 from src.config import YandexS3Config
@@ -37,6 +38,7 @@ app.include_router(workspace_router)
 app.include_router(profile_router)
 app.include_router(user_router)
 app.include_router(auth_router)
+app.include_router(image_router)
 
 
 @app.get('/')
